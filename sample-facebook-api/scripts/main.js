@@ -2,34 +2,39 @@
 
 var deviceready = function() {
 
-    var debug = false,
+    var debug = true,
         cmdLogin = document.getElementById("cmdLogin"),
         cmdWipe = document.getElementById("cmdWipe"),
         cmdPost = document.getElementById("cmdPost"),
-    	cmdGetFeed = document.getElementById("cmdGetFeed"),
+     cmdGetFeed = document.getElementById("cmdGetFeed"),
         cmdDelete = document.getElementById("cmdDelete"),
-        cmdClearLog = document.getElementById("cmdClearLog");
+        cmdClearLog = document.getElementById("cmdClearLog"),
+        inAppBrowserRef;
     
-    // Use ChildBrowser instead of redirecting the main page.
-    jso_registerRedirectHandler(window.plugins.childBrowser.showWebPage);
+    jso_registerRedirectHandler(function(url) {
+        inAppBrowserRef = window.open(url, "_blank");
+        inAppBrowserRef.addEventListener('loadstop', function(e){LocationChange(e.url)}, false);
+    });
 
     /*
-     * Register a handler on the childbrowser that detects redirects and
-     * lets JSO to detect incomming OAuth responses and deal with the content.
-     */
-    window.plugins.childBrowser.onLocationChange = function(url){
+* Register a handler that detects redirects and
+* lets JSO to detect incomming OAuth responses and deal with the content.
+*/
+    
+    function LocationChange(url){
+        outputlog("in location change");
         url = decodeURIComponent(url);
-        console.log("Checking location: " + url);
+        outputlog("Checking location: " + url);
 
         jso_checkfortoken('facebook', url, function() {
-            console.log("Closing child browser, because a valid response was detected.");
-            window.plugins.childBrowser.close();
+            outputlog("Closing InAppBrowser, because a valid response was detected.");
+            inAppBrowserRef.close();
         });
     };
 
     /*
-     * Configure the OAuth providers to use.
-     */
+* Configure the OAuth providers to use.
+*/
     jso_configure({
         "facebook": {
             client_id: "537761576263898",
@@ -39,15 +44,15 @@ var deviceready = function() {
         }
     }, {"debug": debug});
     
-    // jso_dump displays a list of cached tokens using console.log if debugging is enabled.
-    jso_dump(); 
+    // jso_dump displays a list of cached tokens using outputlog if debugging is enabled.
+    jso_dump();
     
     cmdClearLog.addEventListener("click", function() {
-        console.clear();
-    }); 
+        outputclear();
+    });
     
     cmdDelete.addEventListener("click", function() {
-		console.log("delete permissions");
+outputlog("delete permissions");
        
         $.oajax({
             type: "DELETE",
@@ -56,15 +61,15 @@ var deviceready = function() {
             jso_allowia: true,
             dataType: 'json',
             success: function(data) {
-                console.log("Delete response (facebook):");
-                console.log(data);
+                outputlog("Delete response (facebook):");
+                outputlog(data);
             },
             error: function(e) {
-                console.log(e);
+                outputlog(e);
             }
         });
 
-        console.log("wipe tokens");
+        outputlog("wipe tokens");
        jso_wipe();
     });
     
@@ -73,17 +78,17 @@ var deviceready = function() {
         jso_ensureTokens({
                 "facebook": ["read_stream", "publish_stream"]
             });
-    });    
+    });
     
     cmdWipe.addEventListener("click", function() {
         // For debugging purposes you can wipe existing cached tokens...
         
-        console.log("wipe tokens");
+        outputlog("wipe tokens");
         jso_wipe();
     });
     
     cmdGetFeed.addEventListener("click", function() {
-        console.log("Loading home feed...");
+        outputlog("Loading home feed...");
         // Perform the protected OAuth calls.
         $.oajax({
             url: "https://graph.facebook.com/me/home",
@@ -93,24 +98,24 @@ var deviceready = function() {
             dataType: 'json',
             success: function(data) {
                 var i, l, item;
-                console.log("Response (facebook):");
-                //console.log(data.data);
+                outputlog("Response (facebook):");
+                //outputlog(data.data);
                 try {
                     for ( i = 0, l = data.data.length; i < l; i++) {
                         item = data.data[i];
-                        console.log("\n");
-                        console.log(item.story || [item.from.name,":\n", item.message].join("") );
+                        outputlog("\n");
+                        outputlog(item.story || [item.from.name,":\n", item.message].join("") );
                     }
-                } 
+                }
                 catch (e) {
-                    console.log(e);
+                    outputlog(e);
                 }
             }
         });
     });
 
     cmdPost.addEventListener("click", function() {
-        console.log("Post to wall...");
+        outputlog("Post to wall...");
         // Perform the protected OAuth calls.
         $.oajax({
             type: "POST",
@@ -125,23 +130,23 @@ var deviceready = function() {
                 picture: "http://www.icenium.com/iceniumImages/features-main-images/how-it-works.png"
             },
             success: function(data) {
-                console.log("Post response (facebook):");
-                console.log(data);
+                outputlog("Post response (facebook):");
+                outputlog(data);
             },
             error: function(e) {
-                console.log(e);
+                outputlog(e);
             }
         });
-    });    
+    });
 };
 
-console.log = function (m) {
+function  outputlog(m) {
     var resultsField = document.getElementById("result");
     resultsField.innerText += typeof m === 'string' ? m : JSON.stringify(m);
     resultsField.innerText += '\n';
 }
 
-console.clear = function () {
+function outputclear(){
     var resultsField = document.getElementById("result");
     resultsField.innerText = "";
 }
