@@ -93,6 +93,9 @@ body
     border-top: 1px solid #9ca1a5;
     position:relative;
 }
+.content > .result-area.ch30 {
+    overflow-y:scroll;
+}
 .content > .input-area,
 .content > .action-area {
     border-top-color:#fff;
