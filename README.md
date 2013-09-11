@@ -6,3 +6,5 @@ Sample applicaton for Facebook OAuth and Graph API
 * Clear token
 * Read the wall feed
 * Post to wall
+
+For more information please refer to the [sample documentation](http://docs.icenium.com/sample-apps/sample-facebook-api).
