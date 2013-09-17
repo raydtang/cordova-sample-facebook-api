@@ -196,16 +196,16 @@
         // log("Save Tokens (" + provider+ ")");
         localStorage.setItem("tokens-" + provider, JSON.stringify(tokens));
     };
-
+   
     Api_default_storage.prototype.getTokens = function(provider) {
         // log("Get Tokens (" + provider+ ")");
-        var tokens = JSON.parse(localStorage.getItem("tokens-" + provider));
-        if (!tokens)
-            tokens = [];
-
+        var localTokens = localStorage.getItem("tokens-" + provider),
+        tokens = localTokens ? JSON.parse(localTokens) : [];
+ 
         log("Token received", tokens)
         return tokens;
     };
+    
     Api_default_storage.prototype.wipeTokens = function(provider) {
         localStorage.removeItem("tokens-" + provider);
     };
