@@ -7,4 +7,4 @@ Sample applicaton for Facebook OAuth and Graph API
 * Read the wall feed
 * Post to wall
 
-For more information please refer to the [sample documentation](http://docs.icenium.com/sample-apps/sample-facebook-api).
+For more information please refer to the [sample documentation](http://docs.telerik.com/platform/appbuilder/sample-apps/sample-facebook-api).
