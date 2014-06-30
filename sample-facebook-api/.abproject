@@ -50,5 +50,6 @@
     "ID_RESOLUTION_HD720P"
   ],
   "Author": "",
-  "Description": "sample-facebook-api"
+  "Description": "sample-facebook-api",
+  "Framework": "Cordova"
 }
