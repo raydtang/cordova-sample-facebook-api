@@ -51,5 +51,10 @@
   ],
   "Author": "",
   "Description": "sample-facebook-api",
-  "Framework": "Cordova"
+  "Framework": "Cordova",
+  "CordovaPluginVariables": {
+    "com.telerik.mobiletesting": {
+      "IOS_APP_URL": ""
+    }
+  }
 }
