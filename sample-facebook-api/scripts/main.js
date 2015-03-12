@@ -142,13 +142,13 @@ outputlog("delete permissions");
 
 function  outputlog(m) {
     var resultsField = document.getElementById("result");
-    resultsField.innerText += typeof m === 'string' ? m : JSON.stringify(m);
-    resultsField.innerText += '\n';
+    resultsField.textContent += typeof m === 'string' ? m : JSON.stringify(m);
+    resultsField.textContent += '\n';
 }
 
 function outputclear(){
     var resultsField = document.getElementById("result");
-    resultsField.innerText = "";
+    resultsField.textContent = "";
 }
 
 document.addEventListener('deviceready', this.deviceready, false);
